@@ -1,0 +1,46 @@
+# ============================================================
+# Vectra Health — Dependências Python
+# ============================================================
+# Instalar com: pip install -r requirements.txt
+
+# --- Core científico ---
+pandas>=2.0.0
+numpy>=1.26.0
+
+# --- Machine Learning ---
+scikit-learn>=1.4.0
+xgboost>=2.0.0          # opcional — modelo avançado
+joblib>=1.3.0
+
+# --- API FastAPI ---
+fastapi>=0.110.0
+uvicorn[standard]>=0.29.0
+pydantic>=2.0.0
+python-dotenv>=1.0.0
+
+# --- Coleta de dados ---
+requests>=2.31.0
+
+# --- Dados geoespaciais ---
+geobr>=0.2.0             # malha municipal brasileira (PyPI, não confundir com versão R)
+geopandas>=0.14.0        # opcional — operações geoespaciais
+shapely>=2.0.0           # dependência do geopandas
+
+# --- Visualização ---
+matplotlib>=3.8.0
+
+# --- LLM Agent + LangGraph ---
+openai>=1.0.0            # cliente OpenAI-compatible (NVIDIA, OpenAI)
+langgraph>=0.2.0         # grafo de agentes autônomos com estado
+langchain-core>=0.3.0    # tipos base usados pelo LangGraph
+
+# --- Sensores sociais ---
+pytrends>=4.9.2          # opcional — Google Trends; usa fallback sintético sem essa lib
+
+# --- Visão Computacional por satélite ---
+earthengine-api>=0.1.380 # opcional — NDVI/NDWI reais via Google Earth Engine (requer credenciais)
+
+# --- Jupyter (para notebooks) ---
+jupyter>=1.0.0
+ipykernel>=6.0.0
+nbformat>=5.9.0

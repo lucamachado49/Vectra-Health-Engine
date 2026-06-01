@@ -1,0 +1,77 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Ambientes virtuais
+.env
+.venv
+env/
+venv/
+ENV/
+
+# Jupyter
+.ipynb_checkpoints
+*.ipynb_checkpoints/
+
+# Dados sensíveis e grandes volumes
+data/raw/
+data/interim/
+data/processed/
+!data/raw/.gitkeep
+!data/raw/**/
+!data/raw/**/.gitkeep
+!data/interim/.gitkeep
+!data/processed/.gitkeep
+!data/processed/**/
+!data/processed/**/.gitkeep
+!data/external/
+
+# Modelos treinados (binários grandes)
+models/*.pkl
+models/*.joblib
+!models/.gitkeep
+
+# Logs do agente
+data/processed/agent_logs/
+
+# Relatórios gerados automaticamente
+reports/figures/*.png
+reports/tables/*.csv
+reports/summary/*.md
+!reports/figures/.gitkeep
+!reports/tables/.gitkeep
+!reports/pdf/.gitkeep
+!reports/pitch/.gitkeep
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Frontend Node
+frontend/node_modules/
+frontend/dist/
+frontend/.env.local
+
+# Variáveis de ambiente
+.env
+.env.local
+.env.production
+*.env
+
+# Chaves e segredos
+*.key
+*.pem
