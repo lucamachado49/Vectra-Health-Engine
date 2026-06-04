@@ -86,3 +86,59 @@ export function scoreColor(score) {
   if (score >= 30) return '#65a30d';
   return '#16a34a';
 }
+
+/** Escala de risco CONTÍNUA (verde → vermelho), interpolada por score 0–100.
+ *  Dá um mapa de calor mais detalhado e suave que a versão em degraus. */
+const RISK_STOPS = [
+  [0,   [22, 163, 74]],
+  [25,  [132, 204, 22]],
+  [50,  [250, 204, 21]],
+  [75,  [249, 115, 22]],
+  [100, [220, 38, 38]],
+];
+export function riskGradient(score) {
+  const s = Math.max(0, Math.min(100, Number(score) || 0));
+  for (let i = 0; i < RISK_STOPS.length - 1; i++) {
+    const [s0, c0] = RISK_STOPS[i];
+    const [s1, c1] = RISK_STOPS[i + 1];
+    if (s <= s1) {
+      const t = (s - s0) / (s1 - s0);
+      const r = Math.round(c0[0] + (c1[0] - c0[0]) * t);
+      const g = Math.round(c0[1] + (c1[1] - c0[1]) * t);
+      const b = Math.round(c0[2] + (c1[2] - c0[2]) * t);
+      return `rgb(${r},${g},${b})`;
+    }
+  }
+  return 'rgb(220,38,38)';
+}
+
+/** Centroide aproximado (média amostrada do anel externo) — [lat, lng]. */
+function _centroid(feature) {
+  const g = feature.geometry;
+  if (!g) return null;
+  let ring;
+  if (g.type === 'Polygon') ring = g.coordinates[0];
+  else if (g.type === 'MultiPolygon') ring = g.coordinates[0][0];
+  else return null;
+  if (!ring || !ring.length) return null;
+  let x = 0;
+  let y = 0;
+  let n = 0;
+  const step = Math.max(1, Math.floor(ring.length / 10));
+  for (let i = 0; i < ring.length; i += step) { x += ring[i][0]; y += ring[i][1]; n += 1; }
+  return n ? [y / n, x / n] : null;
+}
+
+/** Pontos [lat, lng, intensidade] dos municípios quentes (score >= threshold),
+ *  para o brilho de calor (leaflet.heat). */
+export function riskHeatPoints(geo, threshold = 55) {
+  if (!geo || !geo.features) return [];
+  const pts = [];
+  for (const f of geo.features) {
+    const s = (f.properties && f.properties.score) || 0;
+    if (s < threshold) continue;
+    const c = _centroid(f);
+    if (c) pts.push([c[0], c[1], s / 100]);
+  }
+  return pts;
+}

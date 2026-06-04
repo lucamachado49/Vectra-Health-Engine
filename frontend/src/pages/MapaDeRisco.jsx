@@ -4,8 +4,9 @@ import 'leaflet/dist/leaflet.css';
 import { AlertTriangle, ArrowUpRight, Calendar, Filter, Layers, Loader2, RefreshCw } from 'lucide-react';
 import {
   loadAllMunicipalities, loadManifest, loadNationalRisk, loadRegionMunicipalities,
-  REGION_UFS, REGION_VIEW, scoreColor,
+  REGION_UFS, REGION_VIEW, riskGradient, riskHeatPoints, scoreColor,
 } from '../data/geoLoader.js';
+import HeatGlow from '../components/HeatGlow.jsx';
 
 const BASEMAPS = {
   satelite: { label: 'Satélite', url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}' },
@@ -43,7 +44,7 @@ function RiskGauge({ score }) {
   const color = scoreColor(score);
   return (
     <svg width="80" height="60" viewBox="0 0 80 60" className="risk-gauge-svg">
-      <path d="M10,55 A35,35 0 1,1 70,55" fill="none" stroke="#e2e8f0" strokeWidth="8" strokeLinecap="round" />
+      <path d="M10,55 A35,35 0 1,1 70,55" fill="none" stroke="rgba(148,163,184,.18)" strokeWidth="8" strokeLinecap="round" />
       <path d="M10,55 A35,35 0 1,1 70,55" fill="none" stroke={color} strokeWidth="8" strokeLinecap="round"
         strokeDasharray={`${(score / 100) * 110} 110`} />
       <circle cx="40" cy="40" r="4" fill={color} />
@@ -101,13 +102,13 @@ export default function MapaDeRisco() {
     const score = feature.properties.score || 0;
     const visible = activeRisks.has(labelOf(score));
     // opacidade cresce com o score → áreas mais quentes "queimam" mais forte
-    const heat = 0.45 + (score / 100) * 0.45; // 0.45 → 0.90
+    const heat = 0.5 + (score / 100) * 0.45; // 0.50 → 0.95
     const isSel = selected?.geocode === feature.properties.geocode;
     return {
-      fillColor: scoreColor(score),
-      fillOpacity: visible ? heat : 0.03,
-      color: isSel ? '#fff' : 'rgba(255,255,255,.22)',
-      weight: isSel ? 2.2 : 0.3,
+      fillColor: riskGradient(score),
+      fillOpacity: visible ? heat : 0.04,
+      color: isSel ? '#ffffff' : 'rgba(255,255,255,.16)',
+      weight: isSel ? 2.6 : 0.25,
     };
   };
 
@@ -124,6 +125,8 @@ export default function MapaDeRisco() {
     if (!geojson) return { total: 0 };
     return { total: geojson.features.length };
   }, [geojson]);
+
+  const heatPoints = useMemo(() => riskHeatPoints(geojson, 70), [geojson]);
 
   const reasons = [
     'Transmissão em alta e sazonalidade atual',
@@ -236,6 +239,7 @@ export default function MapaDeRisco() {
             {geojson && (
               <GeoJSON key={geoKey} data={geojson} style={munStyle} onEachFeature={onEachMun} />
             )}
+            {geojson && <HeatGlow points={heatPoints} />}
           </MapContainer>
 
           {/* Seletor de camada base (overlay) */}

@@ -75,3 +75,8 @@ frontend/.env.local
 # Chaves e segredos
 *.key
 *.pem
+
+# Claude Code / artefatos de sessão local
+.claude/
+.remember/
+.playwright-mcp/

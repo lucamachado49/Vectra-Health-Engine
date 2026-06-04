@@ -1,16 +1,18 @@
 import { useEffect, useState } from 'react';
 import {
-  Activity, AlertTriangle, BarChart3, Bell,
-  Home, Map, Search, Settings, Shield, Sun, Zap,
+  Activity, AlertTriangle, BarChart3, Bell, Check, ChevronDown,
+  Home, Map, Moon, Search, Settings, Shield, Zap,
 } from 'lucide-react';
 import { fetchHealth } from './api/vectraApi.js';
 import vectraLogo from './assets/vectra-logo.png';
 
-import VisaoGeral     from './pages/VisaoGeral.jsx';
-import MapaDeRisco    from './pages/MapaDeRisco.jsx';
-import CopilotPage    from './pages/CopilotPage.jsx';
-import AcoesAprovacao from './pages/AcoesAprovacao.jsx';
-import Relatorios     from './pages/Relatorios.jsx';
+import VisaoGeral       from './pages/VisaoGeral.jsx';
+import MapaDeRisco      from './pages/MapaDeRisco.jsx';
+import CentralDeAlertas from './pages/CentralDeAlertas.jsx';
+import CopilotPage      from './pages/CopilotPage.jsx';
+import AcoesAprovacao   from './pages/AcoesAprovacao.jsx';
+import Relatorios       from './pages/Relatorios.jsx';
+import Configuracoes    from './pages/Configuracoes.jsx';
 
 const NAV = [
   { id: 'overview',  label: 'Visão Geral',       icon: Home },
@@ -31,13 +33,13 @@ const INTEGRATIONS = [
 ];
 
 const PAGE_META = {
-  overview: { title: 'Centro de Operações',        sub: 'Decisões mais rápidas, saúde pública mais forte.' },
+  overview: { title: 'Visão Geral',                sub: 'Panorama executivo da situação epidemiológica e climática.' },
   map:      { title: 'Mapa de Risco',              sub: 'Visualize e analise o risco em nível municipal e identifique áreas prioritárias.' },
-  alerts:   { title: 'Alertas',                    sub: 'Monitore e gerencie notificações de risco em tempo real.', beta: true },
+  alerts:   { title: 'Central de Alertas',         sub: 'Monitore, analise e gerencie alertas sanitários em tempo real.', beta: true },
   actions:  { title: 'Ações e Aprovação',          sub: 'Decisões críticas com apoio da IA. Você tem o controle final.' },
   reports:  { title: 'Análises e Explicabilidade', sub: 'Entenda o desempenho dos modelos, fatores de risco e justificativas por região.' },
   copilot:  { title: 'Assistente de Decisão',      sub: 'Inteligência para decisões em saúde pública com foco, contexto e ação.', beta: true },
-  settings: { title: 'Configurações',              sub: 'Gerencie integrações, usuários e preferências da plataforma.' },
+  settings: { title: 'Configurações',              sub: 'Gerencie preferências, permissões, integrações e segurança da plataforma.' },
 };
 
 export default function App() {
@@ -54,11 +56,13 @@ export default function App() {
 
   function renderPage() {
     switch (page) {
-      case 'overview': return <VisaoGeral     onNavigate={setPage} />;
-      case 'map':      return <MapaDeRisco    />;
-      case 'copilot':  return <CopilotPage    />;
-      case 'actions':  return <AcoesAprovacao />;
-      case 'reports':  return <Relatorios     />;
+      case 'overview': return <VisaoGeral       onNavigate={setPage} />;
+      case 'map':      return <MapaDeRisco      />;
+      case 'alerts':   return <CentralDeAlertas />;
+      case 'copilot':  return <CopilotPage      />;
+      case 'actions':  return <AcoesAprovacao   />;
+      case 'reports':  return <Relatorios       />;
+      case 'settings': return <Configuracoes    />;
       default:
         return (
           <div style={{ padding: '60px 0', textAlign: 'center', color: 'var(--text-muted)' }}>
@@ -115,9 +119,9 @@ export default function App() {
             Decisões melhores, vidas protegidas.
           </div>
           <div className="sidebar-theme-toggle">
-            <Sun size={14} />
+            <Moon size={14} />
             <span style={{ color: '#e2e8f0', fontSize: 13, fontWeight: 500 }}>Tema</span>
-            <span>Claro</span>
+            <span>Escuro</span>
           </div>
         </div>
       </aside>
@@ -141,22 +145,33 @@ export default function App() {
           </div>
 
           <div className="topbar-actions">
+            <span className="topbar-live-chip">
+              <Check size={13} /> Atualizado há 2 min
+            </span>
             <button type="button" className="topbar-icon-btn" aria-label="Notificações">
               <Bell size={18} />
               <span className="topbar-notif-badge">2</span>
             </button>
+            <div className="topbar-user">
+              <div className="topbar-avatar">CR</div>
+              <div className="topbar-user-info">
+                <strong>Camila Rocha</strong>
+                <span>Administradora</span>
+              </div>
+              <ChevronDown size={15} style={{ color: 'var(--text-muted)' }} />
+            </div>
           </div>
         </header>
 
         {/* Status bar */}
         <div className="topbar-status-bar">
           <span className="live-dot" />
-          <span style={{ color: 'var(--green)', fontWeight: 600 }}>Atualizado há 2 min</span>
+          <span style={{ color: 'var(--green)', fontWeight: 600 }}>Tempo real</span>
           <div className="divider" />
           <Activity size={12} />
           <span>{apiHealth?.model_loaded ? 'Modelo ativo' : 'Demo resiliente'}</span>
           <div className="divider" />
-          <span style={{ marginLeft: 'auto', fontSize: 11, opacity: .6 }}>Versão 2.4.1</span>
+          <span style={{ marginLeft: 'auto', fontSize: 11, opacity: .6 }}>Versão 2.4.1 · Build 2025.05.14</span>
         </div>
 
         {/* Conteúdo da página */}
