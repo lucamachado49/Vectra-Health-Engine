@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import {
   AlertTriangle, CheckCircle2, ChevronDown, Edit3, Filter,
-  Shield, X,
+  Info, Shield, X,
 } from 'lucide-react';
 import { BRAZIL_MUNICIPALITIES } from '../data/brazilMunicipalities.js';
 import { postAgentProtocol, postAgentReview, streamAutonomousExecution } from '../api/vectraApi.js';
@@ -125,7 +125,7 @@ export default function AcoesAprovacao() {
           <div style={{ padding: '16px 20px' }}>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, alignItems: 'start' }}>
               <div style={{ display: 'flex', gap: 14, alignItems: 'flex-start' }}>
-                <div style={{ width: 52, height: 52, borderRadius: 12, background: '#fee2e2', display: 'grid', placeItems: 'center', flexShrink: 0 }}>
+                <div style={{ width: 52, height: 52, borderRadius: 12, background: 'var(--risk-critico-bg)', border: '1px solid rgba(244,63,94,.35)', display: 'grid', placeItems: 'center', flexShrink: 0 }}>
                   <AlertTriangle size={24} style={{ color: 'var(--risk-critico)' }} />
                 </div>
                 <div>
@@ -213,8 +213,8 @@ export default function AcoesAprovacao() {
                   ))}
                 </tbody>
               </table>
-              <div style={{ marginTop: 12, padding: '8px 12px', background: '#dbeafe', borderRadius: 8, fontSize: 12, color: 'var(--blue)', display: 'flex', gap: 6, alignItems: 'center' }}>
-                ℹ️ Impacto estimado por simulação operacional heurística. Não estima óbitos nem efeito causal individual.
+              <div style={{ marginTop: 12, padding: '8px 12px', background: 'var(--blue-light)', border: '1px solid rgba(59,130,246,.3)', borderRadius: 8, fontSize: 12, color: '#93c5fd', display: 'flex', gap: 6, alignItems: 'center' }}>
+                <Info size={14} style={{ flexShrink: 0 }} /> Impacto estimado por simulação operacional heurística. Não estima óbitos nem efeito causal individual.
               </div>
               <div style={{ marginTop: 12 }}>
                 <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-secondary)', marginBottom: 8 }}>
@@ -309,8 +309,8 @@ export default function AcoesAprovacao() {
 
           <div style={{ padding: '14px 18px', borderBottom: '1px solid var(--border)' }}>
             <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start', marginBottom: 14 }}>
-              <div style={{ width: 36, height: 36, borderRadius: 10, background: '#dcfce7', display: 'grid', placeItems: 'center', flexShrink: 0 }}>
-                <CheckCircle2 size={18} style={{ color: '#16a34a' }} />
+              <div style={{ width: 36, height: 36, borderRadius: 10, background: 'var(--risk-baixo-bg)', border: '1px solid rgba(34,197,94,.32)', display: 'grid', placeItems: 'center', flexShrink: 0 }}>
+                <CheckCircle2 size={18} style={{ color: '#22c55e' }} />
               </div>
               <div>
                 <div style={{ fontWeight: 700, fontSize: 14, marginBottom: 2 }}>Acionar fumacê em áreas críticas</div>
@@ -350,12 +350,12 @@ export default function AcoesAprovacao() {
             </div>
 
             {decision === 'approved' && (
-              <div style={{ marginTop: 12, padding: '10px 12px', background: '#dcfce7', borderRadius: 8, fontSize: 12, color: '#15803d', fontWeight: 600, display: 'flex', gap: 6, alignItems: 'center' }}>
+              <div style={{ marginTop: 12, padding: '10px 12px', background: 'var(--risk-baixo-bg)', border: '1px solid rgba(34,197,94,.32)', borderRadius: 8, fontSize: 12, color: '#86efac', fontWeight: 600, display: 'flex', gap: 6, alignItems: 'center' }}>
                 <CheckCircle2 size={14} /> Protocolo aprovado e em execução
               </div>
             )}
             {decision === 'rejected' && (
-              <div style={{ marginTop: 12, padding: '10px 12px', background: '#fee2e2', borderRadius: 8, fontSize: 12, color: 'var(--risk-critico)', fontWeight: 600, display: 'flex', gap: 6, alignItems: 'center' }}>
+              <div style={{ marginTop: 12, padding: '10px 12px', background: 'var(--risk-critico-bg)', border: '1px solid rgba(244,63,94,.35)', borderRadius: 8, fontSize: 12, color: '#fda4af', fontWeight: 600, display: 'flex', gap: 6, alignItems: 'center' }}>
                 <X size={14} /> Ação rejeitada. Registrado para auditoria.
               </div>
             )}

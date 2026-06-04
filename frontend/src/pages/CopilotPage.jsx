@@ -5,6 +5,7 @@ import {
 } from 'lucide-react';
 import { BRAZIL_MUNICIPALITIES, riskColor, topByRisk } from '../data/brazilMunicipalities.js';
 import { fetchCopilotAnswer } from '../api/vectraApi.js';
+import Donut from '../components/Donut.jsx';
 
 const QUICK_ACTIONS = [
   { label: 'Explore o alerta atual',              icon: AlertTriangle },
@@ -59,7 +60,13 @@ export default function CopilotPage() {
   }
 
   const top5 = topByRisk(5);
-  const totalCritical = BRAZIL_MUNICIPALITIES.filter(m => m.environmental_risk_score >= 70).length;
+  const RISK_DIST = [
+    ['Muito Alto', 132, 32, '#f43f5e'],
+    ['Alto', 121, 29, '#f97316'],
+    ['Moderado', 110, 26, '#facc15'],
+    ['Baixo', 62, 11, '#4ade80'],
+    ['Muito Baixo', 26, 2, '#22c55e'],
+  ];
 
   return (
     <div className="copilot-layout">
@@ -159,18 +166,23 @@ export default function CopilotPage() {
       {/* ── Painel de risco ── */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
         <div className="card">
-          <div className="card-header"><h3>Panorama de risco</h3></div>
-          <div className="card-body" style={{ textAlign: 'center' }}>
-            <div style={{ fontSize: 42, fontWeight: 900, color: riskColor(selected.environmental_risk_score) }}>
-              {(selected.environmental_risk_score / 10).toFixed(1)}
+          <div className="card-header"><h3>Panorama de risco</h3><span style={{ fontSize: 11, color: 'var(--text-muted)' }}>417 municípios</span></div>
+          <div className="card-body" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', paddingTop: 6 }}>
+            <Donut
+              data={RISK_DIST.map(([label, value, , color]) => ({ label, value, color }))}
+              total={417}
+              size={132}
+            />
+            <div style={{ width: '100%', marginTop: 12 }}>
+              {RISK_DIST.map(([l, n, pct, c]) => (
+                <div key={l} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, padding: '3px 0' }}>
+                  <span style={{ width: 9, height: 9, borderRadius: '50%', background: c, flexShrink: 0 }} />
+                  <span style={{ flex: 1, color: 'var(--text-secondary)' }}>{l}</span>
+                  <span style={{ fontWeight: 700 }}>{n}</span>
+                  <span style={{ color: 'var(--text-muted)' }}>({pct}%)</span>
+                </div>
+              ))}
             </div>
-            <div style={{ fontSize: 14, fontWeight: 700, color: riskColor(selected.environmental_risk_score), marginBottom: 6 }}>
-              Risco Alto
-            </div>
-            <div style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 14 }}>
-              Risco elevado para dengue em {totalCritical} municípios.
-            </div>
-            <button type="button" className="btn btn-ghost" style={{ fontSize: 12 }}>Ver detalhes do risco →</button>
           </div>
         </div>
 
