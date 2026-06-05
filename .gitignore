@@ -80,3 +80,8 @@ frontend/.env.local
 .claude/
 .remember/
 .playwright-mcp/
+
+# Artefatos de sessão/teste (não versionar)
+/_test_agents.py
+/arquivos do agente/
+/arquivos do agente.zip
